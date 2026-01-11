@@ -1,0 +1,19 @@
+name: KS-1 Industrial CI Pipeline
+
+on: [push]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+    - name: Install Dependencies
+      run: |
+        pip install pytest
+    - name: Run Dummy Test
+      run: |
+        pytest
