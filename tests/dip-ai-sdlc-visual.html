@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIP — Data Ingestion Platform · AI-SDLC Visual</title>
+<style>
+  :root {
+    --bg:        #0d1117;
+    --bg2:       #161b22;
+    --bg3:       #21262d;
+    --border:    #30363d;
+    --text:      #e6edf3;
+    --muted:     #8b949e;
+    --blue:      #388bfd;
+    --blue-dim:  #1f3a5f;
+    --green:     #3fb950;
+    --green-dim: #1a3a23;
+    --orange:    #f0883e;
+    --orange-dim:#3a2010;
+    --purple:    #bc8cff;
+    --purple-dim:#2d1f4a;
+    --red:       #f85149;
+    --red-dim:   #3a0f0e;
+    --yellow:    #e3b341;
+    --yellow-dim:#3a2d00;
+    --teal:      #39d0c5;
+    --teal-dim:  #0d2e2c;
+    --pink:      #f778ba;
+    --pink-dim:  #3a1128;
+    --radius:    10px;
+    --shadow:    0 4px 24px rgba(0,0,0,0.5);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 32px 24px 80px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .header .badge {
+    display: inline-block;
+    background: var(--blue-dim);
+    color: var(--blue);
+    border: 1px solid var(--blue);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--blue) 0%, var(--teal) 50%, var(--purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  .header p {
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── PHASE SECTIONS ── */
+  .phases { display: flex; flex-direction: column; gap: 0; }
+
+  .phase {
+    display: flex;
+    gap: 0;
+    position: relative;
+  }
+
+  /* left number column */
+  .phase-num {
+    width: 64px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+  }
+  .phase-circle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+    z-index: 2;
+    position: relative;
+  }
+  .phase-line {
+    width: 2px;
+    flex: 1;
+    min-height: 24px;
+    margin-top: 6px;
+  }
+
+  /* phase card */
+  .phase-body {
+    flex: 1;
+    padding: 0 0 32px 16px;
+  }
+  .phase-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    margin-top: 22px;
+  }
+  .phase-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .phase-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .phase-card-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    font-size: 12px;
+  }
+  .phase-card-body { padding: 14px 16px; }
+
+  /* ── CHIPS ── */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border-radius: 5px;
+    padding: 3px 9px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .chip-agent  { background: var(--blue-dim);   color: var(--blue);   border-color: var(--blue); }
+  .chip-skill  { background: var(--green-dim);  color: var(--green);  border-color: var(--green); }
+  .chip-mcp    { background: var(--purple-dim); color: var(--purple); border-color: var(--purple); }
+  .chip-human  { background: var(--yellow-dim); color: var(--yellow); border-color: var(--yellow); }
+  .chip-gate   { background: var(--red-dim);    color: var(--red);    border-color: var(--red); }
+  .chip-ci     { background: var(--orange-dim); color: var(--orange); border-color: var(--orange); }
+  .chip-file   { background: var(--teal-dim);   color: var(--teal);   border-color: var(--teal); }
+  .chip-done   { background: var(--green-dim);  color: var(--green);  border-color: var(--green); }
+  .chip-repo   { background: var(--pink-dim);   color: var(--pink);   border-color: var(--pink); }
+
+  /* ── IO BOXES ── */
+  .io-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+  .io-box {
+    flex: 1; min-width: 200px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 13px;
+  }
+  .io-box .io-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 7px;
+  }
+  .io-box.input  .io-label { color: var(--blue); }
+  .io-box.output .io-label { color: var(--green); }
+  .io-box ul { list-style: none; padding: 0; }
+  .io-box ul li {
+    color: var(--muted);
+    font-size: 11px;
+    padding: 2px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .io-box ul li::before { content: '→'; color: var(--border); flex-shrink: 0; margin-top: 1px; }
+
+  /* ── STEPS LIST ── */
+  .steps { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+  .step {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .step-n {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-text { color: var(--muted); font-size: 12px; line-height: 1.5; flex: 1; }
+  .step-text strong { color: var(--text); }
+
+  /* ── AGENT GRID ── */
+  .agent-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .agent-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 13px;
+  }
+  .agent-card .agent-name {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    word-break: break-all;
+  }
+  .agent-card .agent-domain {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .agent-card .agent-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .skill-tag {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  /* ── CROSS-REPO DIAGRAM ── */
+  .repo-flow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    align-items: stretch;
+    margin-top: 12px;
+  }
+  .repo-col {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .repo-col .repo-name {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .repo-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .repo-arrow .arrow-icon { font-size: 20px; color: var(--red); }
+  .subtask-item {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    font-size: 11px;
+  }
+  .subtask-item:last-child { margin-bottom: 0; }
+  .subtask-id { font-weight: 700; margin-bottom: 3px; }
+  .subtask-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .status-merged  { background: var(--green-dim); color: var(--green); }
+  .status-pending { background: var(--yellow-dim); color: var(--yellow); }
+  .status-blocked { background: var(--red-dim); color: var(--red); }
+  .status-review  { background: var(--blue-dim); color: var(--blue); }
+
+  /* ── SKILLS OVERVIEW ── */
+  .skills-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .skill-bucket {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .skill-bucket-header {
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+  }
+  .skill-bucket-body { padding: 8px 12px; }
+  .skill-bucket-body .skill-item {
+    font-size: 11px;
+    color: var(--muted);
+    padding: 3px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .skill-bullet { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── MATURITY CHECKLIST ── */
+  .checklist {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .check-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 9px 12px;
+  }
+  .check-icon {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .check-icon.done    { background: var(--green-dim); color: var(--green); }
+  .check-icon.todo    { background: var(--bg);        color: var(--border); border: 1px solid var(--border); }
+  .check-icon.build   { background: var(--blue-dim);  color: var(--blue); }
+  .check-text { font-size: 11px; }
+  .check-text strong { color: var(--text); display: block; margin-bottom: 2px; }
+  .check-text span { color: var(--muted); }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    text-align: center;
+    margin: 40px 0 36px;
+    position: relative;
+  }
+  .section-divider::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: 50%;
+    height: 1px;
+    background: var(--border);
+  }
+  .section-divider span {
+    position: relative;
+    background: var(--bg);
+    padding: 0 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    margin-top: 60px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .footer strong { color: var(--text); }
+
+  /* ── COLORS PER PHASE ── */
+  .p1 { --pc: var(--purple); --pd: var(--purple-dim); }
+  .p2 { --pc: var(--blue);   --pd: var(--blue-dim); }
+  .p3 { --pc: var(--yellow); --pd: var(--yellow-dim); }
+  .p4 { --pc: var(--green);  --pd: var(--green-dim); }
+  .p5 { --pc: var(--orange); --pd: var(--orange-dim); }
+  .p6 { --pc: var(--red);    --pd: var(--red-dim); }
+  .p7 { --pc: var(--teal);   --pd: var(--teal-dim); }
+  .p8 { --pc: var(--pink);   --pd: var(--pink-dim); }
+  .p9 { --pc: var(--green);  --pd: var(--green-dim); }
+
+  .phase .phase-circle  { background: var(--pd); color: var(--pc); border: 2px solid var(--pc); }
+  .phase .phase-line    { background: linear-gradient(to bottom, var(--pc), transparent); opacity: 0.3; }
+  .phase .phase-label   { color: var(--pc); }
+  .phase .phase-card    { border-color: var(--pd); }
+  .phase .phase-card-header { background: var(--pd); color: var(--pc); }
+  .phase .step-n        { background: var(--pd); color: var(--pc); }
+
+  code {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 10.5px;
+    color: var(--teal);
+  }
+
+  .note {
+    background: var(--blue-dim);
+    border-left: 3px solid var(--blue);
+    border-radius: 0 6px 6px 0;
+    padding: 9px 13px;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+  .note strong { color: var(--blue); }
+
+  .golden-rule {
+    background: linear-gradient(135deg, var(--yellow-dim), var(--orange-dim));
+    border: 1px solid var(--yellow);
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--yellow);
+    margin: 20px 0 0;
+    letter-spacing: 0.3px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ HEADER ══ -->
+<div class="header">
+  <div class="badge">Data Ingestion Platform</div>
+  <h1>DIP — AI-Assisted SDLC</h1>
+  <p>Complete end-to-end flow: from a Jira story to merged PRs across multiple repos,
+     powered by the <code>dip-agentic-tools</code> skills &amp; agents platform.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════ LEGEND ══ -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Agent / Supervisor</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Skill</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>MCP Server</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div>Human Gate</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Cross-Repo Merge Gate</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div>CI / Validation</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>File Output</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--pink)"></div>Git Repo</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ JOURNEY FLOW ══ -->
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:40px;">
+  <div style="padding:13px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+    <span style="font-size:15px;">📍</span>
+    <span style="font-weight:700;font-size:13px;">End-to-End Developer Journey (Target State)</span>
+    <span style="margin-left:auto;font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;">What we are building toward</span>
+  </div>
+  <div style="display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:20px;scrollbar-width:thin;">
+
+    <div style="background:var(--bg3);border:1px solid var(--purple);border-radius:8px;padding:12px 14px;min-width:130px;text-align:center;flex-shrink:0;">
+      <div style="font-size:20px;margin-bottom:6px;">📋</div>
+      <div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:4px;">Jira Story</div>
+      <div style="font-size:10px;color:var(--muted);">"Start work on DIP-1234"</div>
+    </div>
+
+    <div style="display:flex;align-items:center;padding:0 8px;color:var(--muted);font-size:18px;flex-shrink:0;">→</div>
+
+    <div style="background:var(--bg3);border:1px solid var(--blue);border-radius:8px;padding:12px 14px;min-width:140px;text-align:center;flex-shrink:0;">
+      <div style="font-size:20px;margin-bottom:6px;">🤖</div>
+      <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:4px;">dip-ings-supervisor</div>
+      <div style="font-size:10px;color:var(--muted);">Selected in VS Code agent picker</div>
+    </div>
+
+    <div style="display:flex;align-items:center;padding:0 8px;color:var(--muted);font-size:18px;flex-shrink:0;">→</div>
+
+    <div style="background:var(--bg3);border:1px solid var(--green);border-radius:8px;padding:12px 14px;min-width:145px;text-align:center;flex-shrink:0;">
+      <div style="font-size:20px;margin-bottom:6px;">🛠️</div>
+      <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:4px;">jira-story-breakdown</div>
+      <div style="font-size:10px;color:var(--muted);">Read → Assess → Decompose → Plan JSON</div>
+    </div>
+
+    <div style="display:flex;align-items:center;padding:0 8px;color:var(--muted);font-size:18px;flex-shrink:0;">→</div>
+
+    <div style="background:var(--bg3);border:1px solid var(--yellow);border-radius:8px;padding:12px 14px;min-width:120px;text-align:center;flex-shrink:0;">
+      <div style="font-size:20px;margin-bottom:6px;">🧑</div>
+      <div style="font-size:11px;font-weight:700;color:var(--yellow);margin-bottom:4px;">Human Gate</div>
+      <div style="font-size:10px;color:var(--muted);">Approve the plan before any code</div>
+    </div>
+
+    <div style="display:flex;align-items:center;padding:0 8px;color:var(--muted);font-size:18px;flex-shrink:0;">→</div>
+
+    <div style="background:var(--bg3);border:1px solid var(--orange);border-radius:8px;padding:12px 14px;min-width:145px;text-align:center;flex-shrink:0;">
+      <div style="font-size:20px;margin-bottom:6px;">🤖</div>
+      <div style="font-size:11px;font-weight:700;color:var(--orange);margin-bottom:4px;">Engineer Agents</div>
+      <div style="font-size:10px;color:var(--muted);">Subagents build in dependency order</div>
+    </div>
+
+    <div style="display:flex;align-items:center;padding:0 8px;color:var(--muted);font-size:18px;flex-shrink:0;">→</div>
+
+    <div style="background:var(--bg3);border:1px solid var(--teal);border-radius:8px;padding:12px 14px;min-width:135px;text-align:center;flex-shrink:0;">
+      <div style="font-size:20px;margin-bottom:6px;">🔶</div>
+      <div style="font-size:11px;font-weight:700;color:var(--teal);margin-bottom:4px;">Domain Validators</div>
+      <div style="font-size:10px;color:var(--muted);">validate-app-config / validate-dag-config</div>
+    </div>
+
+    <div style="display:flex;align-items:center;padding:0 8px;color:var(--muted);font-size:18px;flex-shrink:0;">→</div>
+
+    <div style="background:var(--bg3);border:1px solid var(--red);border-radius:8px;padding:12px 14px;min-width:135px;text-align:center;flex-shrink:0;">
+      <div style="font-size:20px;margin-bottom:6px;">⛔</div>
+      <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:4px;">Cross-Repo Gate</div>
+      <div style="font-size:10px;color:var(--muted);">Wait for upstream PR merged before next repo</div>
+    </div>
+
+    <div style="display:flex;align-items:center;padding:0 8px;color:var(--muted);font-size:18px;flex-shrink:0;">→</div>
+
+    <div style="background:var(--bg3);border:1px solid var(--pink);border-radius:8px;padding:12px 14px;min-width:130px;text-align:center;flex-shrink:0;">
+      <div style="font-size:20px;margin-bottom:6px;">🛠️</div>
+      <div style="font-size:11px;font-weight:700;color:var(--pink);margin-bottom:4px;">review-pr</div>
+      <div style="font-size:10px;color:var(--muted);">AI-drafted PR body with checkboxes</div>
+    </div>
+
+    <div style="display:flex;align-items:center;padding:0 8px;color:var(--muted);font-size:18px;flex-shrink:0;">→</div>
+
+    <div style="background:var(--bg3);border:1px solid var(--yellow);border-radius:8px;padding:12px 14px;min-width:130px;text-align:center;flex-shrink:0;">
+      <div style="font-size:20px;margin-bottom:6px;">🧑</div>
+      <div style="font-size:11px;font-weight:700;color:var(--yellow);margin-bottom:4px;">CODEOWNERS</div>
+      <div style="font-size:10px;color:var(--muted);">Human review + merge per repo</div>
+    </div>
+
+    <div style="display:flex;align-items:center;padding:0 8px;color:var(--muted);font-size:18px;flex-shrink:0;">→</div>
+
+    <div style="background:var(--bg3);border:1px solid var(--purple);border-radius:8px;padding:12px 14px;min-width:130px;text-align:center;flex-shrink:0;">
+      <div style="font-size:20px;margin-bottom:6px;">🔌</div>
+      <div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:4px;">jira-ops MCP</div>
+      <div style="font-size:10px;color:var(--muted);">Story marked Done, state updated</div>
+    </div>
+
+    <div style="display:flex;align-items:center;padding:0 8px;color:var(--muted);font-size:18px;flex-shrink:0;">→</div>
+
+    <div style="background:var(--green-dim);border:1px solid var(--green);border-radius:8px;padding:12px 14px;min-width:110px;text-align:center;flex-shrink:0;">
+      <div style="font-size:20px;margin-bottom:6px;">✅</div>
+      <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:4px;">All Merged</div>
+      <div style="font-size:10px;color:var(--muted);">Across all repos. Story Done.</div>
+    </div>
+
+  </div>
+  <div style="background:var(--yellow-dim);border-left:3px solid var(--yellow);border-radius:0 0 var(--radius) var(--radius);padding:10px 20px;font-size:11px;color:var(--muted);">
+    <strong style="color:var(--yellow);">Golden Rule:</strong>
+    The Jira skill <strong style="color:var(--text);">PLANS</strong> &nbsp;·&nbsp;
+    The engineer agents <strong style="color:var(--text);">BUILD</strong> &nbsp;·&nbsp;
+    Cross-repo deps wait for <strong style="color:var(--text);">MERGE</strong> &nbsp;·&nbsp;
+    Jira story is the <strong style="color:var(--text);">STATE STORE</strong> &nbsp;·&nbsp;
+    Session is fully <strong style="color:var(--text);">RESUMABLE</strong>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ PHASES ══ -->
+<div class="phases">
+
+  <!-- ── PHASE 0: SETUP ── -->
+  <div class="phase p1">
+    <div class="phase-num">
+      <div class="phase-circle">0</div>
+      <div class="phase-line"></div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-label">One-time setup</div>
+      <div class="phase-title">Developer Onboarding to DIP Platform</div>
+      <div class="phase-card">
+        <div class="phase-card-header">
+          🔧 &nbsp;Install skills &amp; agents from <code>dip-agentic-tools</code> by reference
+        </div>
+        <div class="phase-card-body">
+          <div class="steps">
+            <div class="step">
+              <div class="step-n">1</div>
+              <div class="step-text"><strong>Install skills:</strong> <code>gh skill install dip-org/dip-agentic-tools --path .agents/skills --pin v1.0.0</code><br>Skills land in <code>~/.copilot/skills/</code> with provenance metadata.</div>
+            </div>
+            <div class="step">
+              <div class="step-n">2</div>
+              <div class="step-text"><strong>Point VS Code at agents:</strong> set <code>chat.agentFilesLocations</code> to your local clone of <code>dip-agentic-tools/.agents/agents</code></div>
+            </div>
+            <div class="step">
+              <div class="step-n">3</div>
+              <div class="step-text"><strong>Verify:</strong> agents appear in the VS Code agent picker dropdown. No <code>@</code> prefix — select from the dropdown.</div>
+            </div>
+          </div>
+          <div class="io-row">
+            <div class="io-box input"><div class="io-label">Input</div><ul><li>Access to <code>dip-agentic-tools</code> repo</li><li>VS Code with GitHub Copilot</li></ul></div>
+            <div class="io-box output"><div class="io-label">Output</div><ul><li>All 28 skills available in every repo</li><li>5 agent personas in VS Code picker</li><li>Skills pinned to <code>v1.0.0</code></li></ul></div>
+          </div>
+          <div class="note"><strong>No per-repo copies.</strong> Central repo is the single source of truth. <code>gh skill update</code> to upgrade when a new version is tagged.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PHASE 1: START FROM JIRA ── -->
+  <div class="phase p2">
+    <div class="phase-num">
+      <div class="phase-circle">1</div>
+      <div class="phase-line"></div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-label">Phase 1 · Initiate</div>
+      <div class="phase-title">Start from Jira Story</div>
+      <div class="phase-card">
+        <div class="phase-card-header">
+          <span class="chip chip-agent">dip-ings-supervisor</span>
+          selected in VS Code agent picker
+        </div>
+        <div class="phase-card-body">
+          <div class="steps">
+            <div class="step">
+              <div class="step-n">1</div>
+              <div class="step-text">Developer types: <strong>"Start work on DIP-1234"</strong></div>
+            </div>
+            <div class="step">
+              <div class="step-n">2</div>
+              <div class="step-text">Supervisor loads <code>AGENTS.md</code> + <code>copilot-instructions.md</code> (always-on layer)</div>
+            </div>
+            <div class="step">
+              <div class="step-n">3</div>
+              <div class="step-text">Description match → activates <span class="chip chip-skill">jira-story-breakdown</span></div>
+            </div>
+            <div class="step">
+              <div class="step-n">4</div>
+              <div class="step-text"><span class="chip chip-mcp">jira-ops MCP</span> <code>get_issue("DIP-1234")</code> fetches the full story</div>
+            </div>
+          </div>
+          <div class="io-row">
+            <div class="io-box input"><div class="io-label">Input</div><ul><li>Jira story ID: <code>DIP-1234</code></li><li>Developer prompt: <code>"Start work on DIP-1234"</code></li></ul></div>
+            <div class="io-box output"><div class="io-label">Output</div><ul><li>Full story text in context</li><li>Title, description, acceptance criteria</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PHASE 2: ASSESS & DECOMPOSE ── -->
+  <div class="phase p3">
+    <div class="phase-num">
+      <div class="phase-circle">2</div>
+      <div class="phase-line"></div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-label">Phase 2 · Plan</div>
+      <div class="phase-title">Assess, Decompose &amp; Route</div>
+      <div class="phase-card">
+        <div class="phase-card-header">
+          <span class="chip chip-skill">common / jira-story-breakdown</span>
+          &nbsp;— produces a plan, NO code
+        </div>
+        <div class="phase-card-body">
+          <div class="steps">
+            <div class="step">
+              <div class="step-n">1</div>
+              <div class="step-text"><strong>READ</strong> — story already in context from Phase 1</div>
+            </div>
+            <div class="step">
+              <div class="step-n">2</div>
+              <div class="step-text"><strong>ASSESS</strong> — score against <code>references/sizing-rubric.md</code>:<br>
+              &gt;5 ACs / &gt;8 pts / &gt;1 source / spans domains → <em>large, decompose</em></div>
+            </div>
+            <div class="step">
+              <div class="step-n">3</div>
+              <div class="step-text"><strong>DECOMPOSE</strong> — split into domain-scoped subtasks with <code>depends_on</code>, <code>repo</code>, <code>depends_on_merge</code></div>
+            </div>
+            <div class="step">
+              <div class="step-n">4</div>
+              <div class="step-text"><strong>ROUTE</strong> — tag each subtask with <code>owner_agent</code> from the routing table</div>
+            </div>
+            <div class="step">
+              <div class="step-n">5</div>
+              <div class="step-text"><strong>EMIT</strong> — write <code>/tmp/DIP-1234-plan.json</code></div>
+            </div>
+            <div class="step">
+              <div class="step-n">6</div>
+              <div class="step-text"><strong>VALIDATE</strong> — <code>python scripts/validate_plan.py /tmp/DIP-1234-plan.json</code><br>
+              Checks: domains valid? owner_agent correct? deps acyclic? cross-repo gates set?<br>
+              Loop until <code>OK: plan is valid, acyclic, and cross-repo gates are correct.</code></div>
+            </div>
+          </div>
+          <div class="io-row">
+            <div class="io-box input"><div class="io-label">Input</div><ul><li>Jira story context</li><li><code>sizing-rubric.md</code></li><li>Domain → repo → agent routing table</li></ul></div>
+            <div class="io-box output"><div class="io-label">Output</div><ul><li><code>/tmp/DIP-1234-plan.json</code></li><li>Validator exit 0</li><li><strong>Zero application code written</strong></li></ul></div>
+          </div>
+          <div class="note">
+            <strong>Routing table:</strong>
+            <code>app</code> → pyspark-ingestion-app → dip-ings-app-engineer &nbsp;|&nbsp;
+            <code>app-config</code> → progectai-ingestion → dip-ings-app-config-engineer &nbsp;|&nbsp;
+            <code>dag</code> → composer → dip-ings-dag-engineer &nbsp;|&nbsp;
+            <code>dag-config</code> → progectai-dag → dip-ings-dag-config-engineer
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PHASE 3: HUMAN GATE ── -->
+  <div class="phase p3">
+    <div class="phase-num">
+      <div class="phase-circle">🧑</div>
+      <div class="phase-line"></div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-label">Human Gate · Plan Approval</div>
+      <div class="phase-title">Developer Reviews &amp; Approves the Plan</div>
+      <div class="phase-card">
+        <div class="phase-card-header">
+          <span class="chip chip-human">🧑 Human Decision</span>
+          No code written until this gate passes
+        </div>
+        <div class="phase-card-body">
+          <div class="steps">
+            <div class="step">
+              <div class="step-n">→</div>
+              <div class="step-text">Supervisor presents the full breakdown: subtask IDs, summaries, domains, repos, dependency order</div>
+            </div>
+            <div class="step">
+              <div class="step-n">→</div>
+              <div class="step-text">Developer can <strong>edit</strong> (change scope, merge subtasks), <strong>reject</strong> (restart), or <strong>approve</strong></div>
+            </div>
+            <div class="step">
+              <div class="step-n">→</div>
+              <div class="step-text">On approval, supervisor writes each subtask <code>{id, repo, domain, status: pending}</code> back to Jira story via <span class="chip chip-mcp">jira-ops/update_issue</span></div>
+            </div>
+          </div>
+          <div class="io-row">
+            <div class="io-box input"><div class="io-label">Input</div><ul><li>The execution plan</li><li>Developer's review</li></ul></div>
+            <div class="io-box output"><div class="io-label">Output</div><ul><li>Approval signal</li><li>Jira story updated with subtask state (Jira = durable state store)</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PHASE 4: DISPATCH SAME-REPO ── -->
+  <div class="phase p4">
+    <div class="phase-num">
+      <div class="phase-circle">4</div>
+      <div class="phase-line"></div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-label">Phase 4 · Build · Same Repo</div>
+      <div class="phase-title">Dispatch Subtasks 1 &amp; 2 — progectai-ingestion</div>
+      <div class="phase-card">
+        <div class="phase-card-header">
+          <span class="chip chip-agent">dip-ings-supervisor</span>
+          handoff → <span class="chip chip-agent">dip-ings-app-config-engineer</span>
+          (subagent, own context)
+        </div>
+        <div class="phase-card-body">
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+            <!-- subtask 1 -->
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;">
+              <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:8px;">Subtask DIP-1234-1</div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Add ingestion jobs: customers + orders (incremental)</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text">Activates <span class="chip chip-skill">add-job</span></div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text">Plan → write <code>/tmp/crm_customers.yaml</code></div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text">Validate <code>validate_job.py</code> loop</div></div>
+                <div class="step"><div class="step-n">4</div><div class="step-text">Execute → <code>configs/jobs/crm/customers.yaml</code></div></div>
+                <div class="step"><div class="step-n">5</div><div class="step-text">Repeat for orders.yaml</div></div>
+                <div class="step"><div class="step-n">6</div><div class="step-text">Run <span class="chip chip-ci">validate-app-config</span></div></div>
+              </div>
+              <div style="margin-top:8px;">
+                <span class="chip chip-file">customers.yaml</span>&nbsp;
+                <span class="chip chip-file">orders.yaml</span>
+              </div>
+            </div>
+            <!-- subtask 2 -->
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;">
+              <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:8px;">Subtask DIP-1234-2 <span style="font-weight:400;color:var(--muted)">(depends on 1, same repo)</span></div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Add SQL transform: orders enrichment</div>
+              <div class="note" style="margin-bottom:8px;"><strong>No merge gate</strong> — same repo as subtask 1. May ride same PR.</div>
+              <div class="steps">
+                <div class="step"><div class="step-n">1</div><div class="step-text">Activates <span class="chip chip-skill">add-sql</span></div></div>
+                <div class="step"><div class="step-n">2</div><div class="step-text">Plan → validate → execute</div></div>
+                <div class="step"><div class="step-n">3</div><div class="step-text">Run <span class="chip chip-ci">validate-app-config</span></div></div>
+              </div>
+              <div style="margin-top:8px;">
+                <span class="chip chip-file">orders_enrich.sql</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;">
+            <div style="font-size:11px;font-weight:700;color:var(--pink);margin-bottom:8px;"><span class="chip chip-repo">progectai-ingestion</span> &nbsp; PR opened</div>
+            <div class="steps">
+              <div class="step"><div class="step-n">→</div><div class="step-text"><span class="chip chip-skill">review-pr</span> drafts PR body from <code>pull_request_template.md</code></div></div>
+              <div class="step"><div class="step-n">→</div><div class="step-text">PRs <code>#101</code> / <code>#102</code> opened</div></div>
+              <div class="step"><div class="step-n">→</div><div class="step-text">Supervisor writes <code>{status: in_review, pr_url}</code> to subtasks 1 &amp; 2 in Jira</div></div>
+            </div>
+          </div>
+
+          <div class="io-row">
+            <div class="io-box input"><div class="io-label">Input</div><ul><li>Subtask 1 &amp; 2 from approved plan</li><li>Source: CRM, load_mode: incremental, watermark: updated_at</li></ul></div>
+            <div class="io-box output"><div class="io-label">Output</div><ul><li><code>configs/jobs/crm/customers.yaml</code></li><li><code>configs/jobs/crm/orders.yaml</code></li><li><code>configs/sql/orders_enrich.sql</code></li><li>PR <code>progectai-ingestion#101</code></li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PHASE 5: HUMAN REVIEW + MERGE ── -->
+  <div class="phase p3">
+    <div class="phase-num">
+      <div class="phase-circle">🧑</div>
+      <div class="phase-line"></div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-label">Human Gate · Code Review</div>
+      <div class="phase-title">CODEOWNERS Review + Merge — progectai-ingestion</div>
+      <div class="phase-card">
+        <div class="phase-card-header">
+          <span class="chip chip-human">🧑 Human Review</span>
+          &nbsp;<span class="chip chip-ci">CI Pipeline</span>
+          &nbsp;<span class="chip chip-repo">progectai-ingestion</span>
+        </div>
+        <div class="phase-card-body">
+          <div class="steps">
+            <div class="step"><div class="step-n">1</div><div class="step-text">Repo CI re-runs <span class="chip chip-ci">validate-app-config</span> + unit tests</div></div>
+            <div class="step"><div class="step-n">2</div><div class="step-text">CODEOWNERS for <code>progectai-ingestion</code> review and approve</div></div>
+            <div class="step"><div class="step-n">3</div><div class="step-text">PRs <strong>merged</strong> → supervisor updates subtasks 1 &amp; 2 to <code>status: merged</code></div></div>
+            <div class="step"><div class="step-n">4</div><div class="step-text" style="color:var(--yellow);">⏳ <strong>Live session may end here.</strong> Cross-repo gate now active for subtask 3.</div></div>
+          </div>
+          <div class="io-row">
+            <div class="io-box input"><div class="io-label">Input</div><ul><li>PRs <code>#101 / #102</code></li><li>CODEOWNERS approval</li></ul></div>
+            <div class="io-box output"><div class="io-label">Output</div><ul><li>PRs merged ✅</li><li>Jira: subtasks 1 &amp; 2 → <code>merged</code></li><li>Cross-repo gate for subtask 3 now openable</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PHASE 6: CROSS-REPO GATE ── -->
+  <div class="phase p6">
+    <div class="phase-num">
+      <div class="phase-circle">⛔</div>
+      <div class="phase-line"></div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-label">Cross-Repo Merge Gate</div>
+      <div class="phase-title">Resume + Gate Check — Jira as State Store</div>
+      <div class="phase-card">
+        <div class="phase-card-header">
+          <span class="chip chip-gate">⛔ Cross-Repo Gate</span>
+          &nbsp;<span class="chip chip-mcp">github MCP</span>
+          &nbsp;<span class="chip chip-mcp">jira-ops MCP</span>
+        </div>
+        <div class="phase-card-body">
+
+          <div class="repo-flow">
+            <div class="repo-col">
+              <div class="repo-name" style="color:var(--pink);">progectai-ingestion</div>
+              <div class="subtask-item">
+                <div class="subtask-id">DIP-1234-1</div>
+                <div style="font-size:10px;color:var(--muted);">customers.yaml + orders.yaml</div>
+                <div class="subtask-status status-merged">✅ merged · PR #101</div>
+              </div>
+              <div class="subtask-item">
+                <div class="subtask-id">DIP-1234-2</div>
+                <div style="font-size:10px;color:var(--muted);">orders_enrich.sql</div>
+                <div class="subtask-status status-merged">✅ merged · PR #102</div>
+              </div>
+            </div>
+            <div class="repo-arrow">
+              <div class="arrow-icon">→</div>
+              <div style="font-size:10px;font-weight:700;color:var(--red);">MERGE<br>GATE</div>
+              <div style="font-size:9px;color:var(--muted);text-align:center;">depends_on_merge<br>= true</div>
+            </div>
+            <div class="repo-col">
+              <div class="repo-name" style="color:var(--pink);">progectai-dag</div>
+              <div class="subtask-item">
+                <div class="subtask-id">DIP-1234-3</div>
+                <div style="font-size:10px;color:var(--muted);">daily_crm_dag.json</div>
+                <div class="subtask-status status-pending">⏳ pending → now ready</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="steps" style="margin-top:14px;">
+            <div class="step"><div class="step-n">1</div><div class="step-text">Developer: <strong>"continue DIP-1234"</strong> with supervisor selected</div></div>
+            <div class="step"><div class="step-n">2</div><div class="step-text">Supervisor reads Jira story via <span class="chip chip-mcp">jira-ops/get_issue</span> — NOT the stale <code>/tmp</code> plan</div></div>
+            <div class="step"><div class="step-n">3</div><div class="step-text">Checks PR status via <span class="chip chip-mcp">github/get_pull_request</span> for deps 1 &amp; 2</div></div>
+            <div class="step"><div class="step-n">4</div><div class="step-text">Both merged → gate passes → dispatch subtask 3</div></div>
+          </div>
+          <div class="io-row">
+            <div class="io-box input"><div class="io-label">Input</div><ul><li>"continue DIP-1234" prompt</li><li>Jira story state</li><li>GitHub PR merge status</li></ul></div>
+            <div class="io-box output"><div class="io-label">Output</div><ul><li>Gate cleared</li><li>Subtask 3 dispatched to dag-config-engineer</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PHASE 7: DAG CONFIG ── -->
+  <div class="phase p7">
+    <div class="phase-num">
+      <div class="phase-circle">7</div>
+      <div class="phase-line"></div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-label">Phase 7 · Build · Cross-Repo</div>
+      <div class="phase-title">Dispatch Subtask 3 — progectai-dag</div>
+      <div class="phase-card">
+        <div class="phase-card-header">
+          <span class="chip chip-agent">dip-ings-supervisor</span>
+          handoff → <span class="chip chip-agent">dip-ings-dag-config-engineer</span>
+          (subagent · progectai-dag working tree)
+        </div>
+        <div class="phase-card-body">
+          <div class="steps">
+            <div class="step"><div class="step-n">1</div><div class="step-text">Activates <span class="chip chip-skill">add-dag</span> — references the now-<strong>merged</strong> job names</div></div>
+            <div class="step"><div class="step-n">2</div><div class="step-text">Plan → write <code>/tmp/daily_crm_dag.json</code></div></div>
+            <div class="step"><div class="step-n">3</div><div class="step-text">Activates <span class="chip chip-skill">add-task</span> — adds tasks for <code>crm_customers</code> + <code>crm_orders</code></div></div>
+            <div class="step"><div class="step-n">4</div><div class="step-text">Run <span class="chip chip-ci">validate-dag-config</span> — loop until pass</div></div>
+            <div class="step"><div class="step-n">5</div><div class="step-text">Execute → <code>dags/daily_crm_dag.json</code></div></div>
+            <div class="step"><div class="step-n">6</div><div class="step-text"><span class="chip chip-skill">review-pr</span> drafts PR body → open <code>progectai-dag#201</code></div></div>
+            <div class="step"><div class="step-n">7</div><div class="step-text">Supervisor writes <code>{status: in_review, pr_url: progectai-dag#201}</code> to Jira</div></div>
+          </div>
+          <div class="io-row">
+            <div class="io-box input"><div class="io-label">Input</div><ul><li>Subtask 3 from plan</li><li>Merged job names from progectai-ingestion</li><li>Schedule: daily</li></ul></div>
+            <div class="io-box output"><div class="io-label">Output</div><ul><li><code>dags/daily_crm_dag.json</code></li><li>Tasks: crm_customers + crm_orders</li><li>PR <code>progectai-dag#201</code></li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PHASE 8: FINAL REVIEW ── -->
+  <div class="phase p8">
+    <div class="phase-num">
+      <div class="phase-circle">🧑</div>
+      <div class="phase-line"></div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-label">Human Gate · Final Review</div>
+      <div class="phase-title">CODEOWNERS Review + Merge — progectai-dag</div>
+      <div class="phase-card">
+        <div class="phase-card-header">
+          <span class="chip chip-human">🧑 Human Review</span>
+          &nbsp;<span class="chip chip-ci">CI Pipeline</span>
+          &nbsp;<span class="chip chip-repo">progectai-dag</span>
+        </div>
+        <div class="phase-card-body">
+          <div class="steps">
+            <div class="step"><div class="step-n">1</div><div class="step-text"><span class="chip chip-skill">jira-ticket-writer</span> posts all subtask statuses to DIP-1234</div></div>
+            <div class="step"><div class="step-n">2</div><div class="step-text">Repo CI re-runs <span class="chip chip-ci">validate-dag-config</span> + unit tests</div></div>
+            <div class="step"><div class="step-n">3</div><div class="step-text">CODEOWNERS for <code>progectai-dag</code> review and approve</div></div>
+            <div class="step"><div class="step-n">4</div><div class="step-text">PR <strong>merged</strong> → supervisor marks story Done in Jira</div></div>
+          </div>
+          <div class="io-row">
+            <div class="io-box input"><div class="io-label">Input</div><ul><li>PR <code>progectai-dag#201</code></li><li>CODEOWNERS approval</li></ul></div>
+            <div class="io-box output"><div class="io-label">Output</div><ul><li>PR merged ✅</li><li>Jira DIP-1234 → Done</li><li>All 3 subtasks in <code>merged</code> state</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PHASE 9: DONE ── -->
+  <div class="phase p9">
+    <div class="phase-num">
+      <div class="phase-circle">✅</div>
+      <div class="phase-line" style="opacity:0"></div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-label">Complete</div>
+      <div class="phase-title">Story Done — All repos green, Jira closed</div>
+      <div class="phase-card">
+        <div class="phase-card-header" style="background:var(--green-dim);color:var(--green);">
+          ✅ DIP-1234 complete — 2 repos, 3 subtasks, 0 manually written boilerplate
+        </div>
+        <div class="phase-card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--pink);margin-bottom:8px;"><span class="chip chip-repo">progectai-ingestion</span></div>
+              <div style="font-size:11px;color:var(--muted);">
+                <div>✅ <code>configs/jobs/crm/customers.yaml</code></div>
+                <div>✅ <code>configs/jobs/crm/orders.yaml</code></div>
+                <div>✅ <code>configs/sql/orders_enrich.sql</code></div>
+                <div style="margin-top:6px;">PRs #101 / #102 merged</div>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--pink);margin-bottom:8px;"><span class="chip chip-repo">progectai-dag</span></div>
+              <div style="font-size:11px;color:var(--muted);">
+                <div>✅ <code>dags/daily_crm_dag.json</code></div>
+                <div style="margin-top:6px;">PR #201 merged</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end phases -->
+
+<!-- ═══════════════════════════════════════════════ SKILLS OVERVIEW ══ -->
+<div class="section-divider"><span>Skills Library — dip-agentic-tools</span></div>
+
+<div class="skills-overview">
+  <div class="skill-bucket">
+    <div class="skill-bucket-header" style="background:var(--blue-dim);color:var(--blue);">
+      🌐 common/ — all repos
+    </div>
+    <div class="skill-bucket-body">
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--blue)"></div>jira-story-breakdown</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--blue)"></div>jira-ticket-writer</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--blue)"></div>review-pr</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--blue)"></div>generate-docs</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--blue)"></div>debug-pipeline</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--blue)"></div>devops-infra-tickets</div>
+    </div>
+  </div>
+  <div class="skill-bucket">
+    <div class="skill-bucket-header" style="background:var(--orange-dim);color:var(--orange);">
+      ⚡ app/ — PySpark
+    </div>
+    <div class="skill-bucket-body">
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--orange)"></div>write-task</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--orange)"></div>write-service</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--orange)"></div>write-unit-test</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--orange)"></div>write-genai-app</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--orange)"></div>tsql-to-bq</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--orange)"></div>barricade-migrate</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--orange)"></div>validate-yaml-config</div>
+    </div>
+  </div>
+  <div class="skill-bucket">
+    <div class="skill-bucket-header" style="background:var(--green-dim);color:var(--green);">
+      📄 app-config/ — YAML
+    </div>
+    <div class="skill-bucket-body">
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--green)"></div>pipeline-builder</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--green)"></div>add-environment</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--green)"></div>add-job</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--green)"></div>add-pipeline</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--green)"></div>add-sql</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--green)"></div>onboard-source</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--green)"></div>validate-app-config</div>
+    </div>
+  </div>
+  <div class="skill-bucket">
+    <div class="skill-bucket-header" style="background:var(--purple-dim);color:var(--purple);">
+      🔧 dag/ — Airflow Plugin
+    </div>
+    <div class="skill-bucket-body">
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--purple)"></div>write-operator <span style="font-size:9px;color:var(--red);margin-left:4px;">NEW</span></div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--purple)"></div>write-sensor <span style="font-size:9px;color:var(--red);margin-left:4px;">NEW</span></div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--purple)"></div>write-airflow-service <span style="font-size:9px;color:var(--red);margin-left:4px;">NEW</span></div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--purple)"></div>write-generator <span style="font-size:9px;color:var(--red);margin-left:4px;">NEW</span></div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--purple)"></div>debug-plugin <span style="font-size:9px;color:var(--red);margin-left:4px;">NEW</span></div>
+    </div>
+  </div>
+  <div class="skill-bucket">
+    <div class="skill-bucket-header" style="background:var(--teal-dim);color:var(--teal);">
+      📋 dag-config/ — JSON
+    </div>
+    <div class="skill-bucket-body">
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--teal)"></div>add-dag</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--teal)"></div>add-task</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--teal)"></div>add-template</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--teal)"></div>debug-dag-config</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--teal)"></div>onboard-dag</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--teal)"></div>upgrade-plugin</div>
+      <div class="skill-item"><div class="skill-bullet" style="background:var(--teal)"></div>validate-dag-config</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ AGENTS ══ -->
+<div class="section-divider"><span>Agent Personas</span></div>
+
+<div class="agent-grid">
+  <div class="agent-card">
+    <div class="agent-name" style="color:var(--yellow);">dip-ings-supervisor</div>
+    <div class="agent-domain">Entry point · All domains · Resumable via Jira</div>
+    <div class="agent-skills">
+      <span class="skill-tag">jira-story-breakdown</span>
+      <span class="skill-tag">review-pr</span>
+      <span class="skill-tag">jira-ticket-writer</span>
+      <span class="skill-tag">jira-ops MCP</span>
+      <span class="skill-tag">github MCP</span>
+    </div>
+  </div>
+  <div class="agent-card">
+    <div class="agent-name" style="color:var(--orange);">dip-ings-app-engineer</div>
+    <div class="agent-domain">PySpark · pyspark-ingestion-app</div>
+    <div class="agent-skills">
+      <span class="skill-tag">write-task</span>
+      <span class="skill-tag">write-service</span>
+      <span class="skill-tag">write-unit-test</span>
+      <span class="skill-tag">tsql-to-bq</span>
+      <span class="skill-tag">pyspark-ops MCP</span>
+    </div>
+  </div>
+  <div class="agent-card">
+    <div class="agent-name" style="color:var(--green);">dip-ings-app-config-engineer</div>
+    <div class="agent-domain">YAML Config · progectai-ingestion</div>
+    <div class="agent-skills">
+      <span class="skill-tag">add-job</span>
+      <span class="skill-tag">add-sql</span>
+      <span class="skill-tag">add-pipeline</span>
+      <span class="skill-tag">onboard-source</span>
+      <span class="skill-tag">validate-app-config</span>
+    </div>
+  </div>
+  <div class="agent-card">
+    <div class="agent-name" style="color:var(--purple);">dip-ings-dag-engineer</div>
+    <div class="agent-domain">Airflow Plugin · composer</div>
+    <div class="agent-skills">
+      <span class="skill-tag">write-operator</span>
+      <span class="skill-tag">write-sensor</span>
+      <span class="skill-tag">write-airflow-service</span>
+      <span class="skill-tag">debug-plugin</span>
+    </div>
+  </div>
+  <div class="agent-card">
+    <div class="agent-name" style="color:var(--teal);">dip-ings-dag-config-engineer</div>
+    <div class="agent-domain">DAG JSON · progectai-dag</div>
+    <div class="agent-skills">
+      <span class="skill-tag">add-dag</span>
+      <span class="skill-tag">add-task</span>
+      <span class="skill-tag">upgrade-plugin</span>
+      <span class="skill-tag">validate-dag-config</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ CHECKLIST ══ -->
+<div class="section-divider"><span>Maturity Checklist</span></div>
+
+<div class="checklist">
+  <div class="check-item"><div class="check-icon done">✓</div><div class="check-text"><strong>Four layers separated</strong><span>Instructions / Principles / Skills / Agents</span></div></div>
+  <div class="check-item"><div class="check-icon build">→</div><div class="check-text"><strong>Skill spec validation</strong><span>name=dir, ≤64 chars, desc≤1024, ≤500 lines</span></div></div>
+  <div class="check-item"><div class="check-icon build">→</div><div class="check-text"><strong>Global name uniqueness</strong><span>Flat-install safe via CI gate</span></div></div>
+  <div class="check-item"><div class="check-icon build">→</div><div class="check-text"><strong>Gold-standard template</strong><span>Fix skill-template.md first</span></div></div>
+  <div class="check-item"><div class="check-icon build">→</div><div class="check-text"><strong>Gotchas sections</strong><span>Grown from real corrections in every skill</span></div></div>
+  <div class="check-item"><div class="check-icon build">→</div><div class="check-text"><strong>Agent layer</strong><span>5 personas routing to skills + scoping tools</span></div></div>
+  <div class="check-item"><div class="check-icon build">→</div><div class="check-text"><strong>Supervisor + jira-story-breakdown</strong><span>Plan → approve → route flow</span></div></div>
+  <div class="check-item"><div class="check-icon build">→</div><div class="check-text"><strong>Cross-repo merge gates</strong><span>Resumable via Jira state store + GitHub MCP</span></div></div>
+  <div class="check-item"><div class="check-icon build">→</div><div class="check-text"><strong>Live ops via MCP</strong><span>jira-ops / github / pyspark-ops on Cloud Run</span></div></div>
+  <div class="check-item"><div class="check-icon build">→</div><div class="check-text"><strong>CI quality gate</strong><span>validate-skills.yml on every PR</span></div></div>
+  <div class="check-item"><div class="check-icon build">→</div><div class="check-text"><strong>Consumption by reference</strong><span>No per-repo copies; pin to version tag</span></div></div>
+  <div class="check-item"><div class="check-icon build">→</div><div class="check-text"><strong>Semantic versioning</strong><span>CHANGELOG + consumers pin releases</span></div></div>
+  <div class="check-item"><div class="check-icon build">→</div><div class="check-text"><strong>Least-privilege</strong><span>Agents scope tools; secrets via GSM</span></div></div>
+  <div class="check-item"><div class="check-icon build">→</div><div class="check-text"><strong>Evals</strong><span>jira-ticket-writer + write-genai-app cases</span></div></div>
+  <div class="check-item"><div class="check-icon build">→</div><div class="check-text"><strong>Installable plugin</strong><span>plugin.json + llms.txt + CONTRIBUTING + CHANGELOG</span></div></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ GOLDEN RULE ══ -->
+<div class="golden-rule">
+  🎯 &nbsp; The Jira skill <strong>PLANS</strong> &nbsp;·&nbsp; The agents <strong>BUILD</strong> &nbsp;·&nbsp; Cross-repo deps wait for <strong>MERGE</strong> &nbsp;·&nbsp; Jira story is the <strong>STATE STORE</strong>
+</div>
+
+<!-- ═══════════════════════════════════════════════ FOOTER ══ -->
+<div class="footer">
+  <strong>DIP — Data Ingestion Platform</strong> · dip-agentic-tools · Agent Skills standard (agentskills.io)<br>
+  Portable across Copilot (VS Code / CLI / cloud) · Claude Code · Cursor · Databricks Genie Code
+</div>
+
+</body>
+</html>
