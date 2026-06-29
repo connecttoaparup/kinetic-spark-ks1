@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIP — Current AI-SDLC Capabilities (As-Is)</title>
+<style>
+  :root {
+    --bg:         #0d1117;
+    --bg2:        #161b22;
+    --bg3:        #21262d;
+    --bg4:        #2d333b;
+    --border:     #30363d;
+    --text:       #e6edf3;
+    --muted:      #8b949e;
+    --blue:       #388bfd;
+    --blue-dim:   #1f3a5f;
+    --green:      #3fb950;
+    --green-dim:  #1a3a23;
+    --orange:     #f0883e;
+    --orange-dim: #3a2010;
+    --purple:     #bc8cff;
+    --purple-dim: #2d1f4a;
+    --red:        #f85149;
+    --red-dim:    #3a0f0e;
+    --yellow:     #e3b341;
+    --yellow-dim: #3a2d00;
+    --teal:       #39d0c5;
+    --teal-dim:   #0d2e2c;
+    --pink:       #f778ba;
+    --pink-dim:   #3a1128;
+    --radius:     10px;
+    --shadow:     0 4px 24px rgba(0,0,0,0.5);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 32px 28px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .header { text-align: center; margin-bottom: 48px; }
+  .header .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green-dim); color: var(--green);
+    border: 1px solid var(--green); border-radius: 20px;
+    padding: 4px 16px; font-size: 11px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .header h1 {
+    font-size: 34px; font-weight: 800; line-height: 1.2; margin-bottom: 10px;
+    background: linear-gradient(135deg, #3fb950 0%, #39d0c5 50%, #388bfd 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .header .subtitle { color: var(--muted); font-size: 14px; max-width: 680px; margin: 0 auto 20px; }
+  .header .tag-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .tag {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 6px; padding: 4px 12px;
+    font-size: 11px; color: var(--muted);
+  }
+
+  /* ── STATS ROW ── */
+  .stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px; margin-bottom: 48px;
+  }
+  .stat-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px; text-align: center;
+  }
+  .stat-num { font-size: 28px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+  .stat-label { font-size: 11px; color: var(--muted); }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 20px;
+  }
+  .section-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .section-meta { flex: 1; }
+  .section-phase {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 3px;
+  }
+  .section-title { font-size: 20px; font-weight: 700; }
+  .section-desc { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+  /* ── PHASE WRAPPER ── */
+  .phase-section { margin-bottom: 48px; }
+  .phase-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+  }
+
+  /* ── FEATURE GRID ── */
+  .feature-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0;
+  }
+  .feature-item {
+    padding: 18px 20px; border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+  .feature-item:last-child { border-right: none; }
+  .feature-item-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  }
+  .feature-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .feature-name { font-size: 13px; font-weight: 700; }
+  .feature-cmd {
+    display: inline-block; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 5px;
+    padding: 2px 8px; font-family: 'SF Mono','Consolas',monospace;
+    font-size: 11px; color: var(--teal); margin-bottom: 8px;
+  }
+  .feature-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* ── STEPS ── */
+  .steps-list { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .step-row {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 14px;
+  }
+  .step-badge {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+  .step-content { flex: 1; }
+  .step-title { font-weight: 700; font-size: 12px; margin-bottom: 3px; }
+  .step-detail { font-size: 11px; color: var(--muted); line-height: 1.6; }
+
+  /* ── CHIPS ── */
+  .chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    border-radius: 5px; padding: 2px 8px;
+    font-size: 10px; font-weight: 700; border: 1px solid; white-space: nowrap;
+    vertical-align: middle;
+  }
+  .c-green  { background: var(--green-dim);  color: var(--green);  border-color: var(--green); }
+  .c-blue   { background: var(--blue-dim);   color: var(--blue);   border-color: var(--blue); }
+  .c-orange { background: var(--orange-dim); color: var(--orange); border-color: var(--orange); }
+  .c-purple { background: var(--purple-dim); color: var(--purple); border-color: var(--purple); }
+  .c-teal   { background: var(--teal-dim);   color: var(--teal);   border-color: var(--teal); }
+  .c-yellow { background: var(--yellow-dim); color: var(--yellow); border-color: var(--yellow); }
+  .c-red    { background: var(--red-dim);    color: var(--red);    border-color: var(--red); }
+  .c-pink   { background: var(--pink-dim);   color: var(--pink);   border-color: var(--pink); }
+
+  /* ── COMMAND TABLE ── */
+  .cmd-table { width: 100%; border-collapse: collapse; }
+  .cmd-table th {
+    background: var(--bg3); padding: 9px 14px;
+    text-align: left; font-size: 11px; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.5px; border-bottom: 1px solid var(--border);
+  }
+  .cmd-table td {
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+    font-size: 11px; vertical-align: top;
+  }
+  .cmd-table tr:last-child td { border-bottom: none; }
+  .cmd-table tr:hover td { background: var(--bg3); }
+  code {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 4px; padding: 1px 6px;
+    font-family: 'SF Mono','Consolas',monospace;
+    font-size: 10.5px; color: var(--teal);
+  }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow { display: flex; align-items: stretch; gap: 0; overflow-x: auto; padding: 20px; }
+  .flow-node {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 14px; min-width: 150px; text-align: center;
+    flex-shrink: 0;
+  }
+  .flow-node .fn-icon { font-size: 20px; margin-bottom: 6px; }
+  .flow-node .fn-title { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+  .flow-node .fn-detail { font-size: 10px; color: var(--muted); line-height: 1.5; }
+  .flow-arrow {
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 8px; color: var(--muted); font-size: 18px; flex-shrink: 0;
+  }
+
+  /* ── TRACKER SECTION ── */
+  .tracker-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px 20px;
+  }
+  .tracker-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px;
+  }
+  .tracker-card .tc-header {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  }
+  .tracker-card .tc-icon {
+    width: 28px; height: 28px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+  }
+  .tracker-card .tc-title { font-weight: 700; font-size: 12px; }
+  .tracker-card .tc-desc { font-size: 11px; color: var(--muted); line-height: 1.6; }
+  .metric-row {
+    display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;
+  }
+  .metric {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 10px; text-align: center;
+  }
+  .metric .m-val { font-size: 16px; font-weight: 800; }
+  .metric .m-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* ── TWO LAYER ── */
+  .two-layer {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px 20px;
+  }
+  .layer-card {
+    border-radius: 8px; padding: 14px; border: 1px solid;
+  }
+  .layer-card .lc-num {
+    font-size: 28px; font-weight: 800; margin-bottom: 4px;
+  }
+  .layer-card .lc-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .layer-card .lc-desc { font-size: 11px; line-height: 1.6; }
+  .layer-card .lc-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    text-align: center; margin: 40px 0 36px; position: relative;
+  }
+  .divider::before {
+    content: ''; position: absolute; left: 0; right: 0; top: 50%;
+    height: 1px; background: var(--border);
+  }
+  .divider span {
+    position: relative; background: var(--bg); padding: 0 16px;
+    font-size: 10px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+  }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  .compare-table th {
+    padding: 10px 14px; font-size: 11px; font-weight: 700;
+    border-bottom: 1px solid var(--border); text-align: left;
+  }
+  .compare-table td {
+    padding: 10px 14px; font-size: 11px;
+    border-bottom: 1px solid var(--border); color: var(--muted);
+    vertical-align: top;
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table .col-phase { color: var(--text); font-weight: 600; }
+  .compare-table .col-today { color: var(--green); }
+  .compare-table .col-next { color: var(--blue); }
+
+  /* ── NOTE BOX ── */
+  .note {
+    background: var(--blue-dim); border-left: 3px solid var(--blue);
+    border-radius: 0 6px 6px 0; padding: 10px 14px;
+    font-size: 11px; color: var(--muted); margin: 12px 16px;
+  }
+  .note strong { color: var(--blue); }
+
+  .warn {
+    background: var(--yellow-dim); border-left: 3px solid var(--yellow);
+    border-radius: 0 6px 6px 0; padding: 10px 14px;
+    font-size: 11px; color: var(--muted); margin: 12px 16px;
+  }
+  .warn strong { color: var(--yellow); }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center; margin-top: 60px;
+    color: var(--muted); font-size: 11px;
+  }
+  .footer strong { color: var(--text); }
+
+  @media (max-width: 600px) {
+    .feature-grid, .two-layer, .tracker-grid { grid-template-columns: 1fr; }
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════ HEADER ══ -->
+<div class="header">
+  <div class="eyebrow">✅ Live &amp; Running Today</div>
+  <h1>DIP — Current AI-SDLC Capabilities</h1>
+  <p class="subtitle">
+    We have moved beyond basic AI chat prompts. Today we operate a highly specialised,
+    domain-aware AI toolkit that understands our exact data pipelines, workflows,
+    and ingestion platform — running inside VS Code and the terminal every day.
+  </p>
+  <div class="tag-row">
+    <div class="tag">GitHub Copilot Chat</div>
+    <div class="tag">Copilot CLI</div>
+    <div class="tag">VS Code</div>
+    <div class="tag">Jira Integration</div>
+    <div class="tag">BigQuery Telemetry</div>
+    <div class="tag">PySpark · Airflow · GCP</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ STATS ══ -->
+<div class="stats">
+  <div class="stat-card">
+    <div class="stat-num" style="color:var(--green);">28+</div>
+    <div class="stat-label">Domain Skills Built</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" style="color:var(--blue);">4</div>
+    <div class="stat-label">Repo Domains Covered</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" style="color:var(--purple);">3</div>
+    <div class="stat-label">Active SDLC Phases</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" style="color:var(--orange);">2</div>
+    <div class="stat-label">Quality Review Layers</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" style="color:var(--teal);">0</div>
+    <div class="stat-label">Manual Boilerplate Files</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" style="color:var(--yellow);">Live</div>
+    <div class="stat-label">BQ Usage Dashboard</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ HOW IT RUNS TODAY ══ -->
+<div class="divider"><span>How It Runs Today</span></div>
+
+<!-- overall flow -->
+<div class="phase-card" style="margin-bottom:32px;">
+  <div style="padding:14px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:13px;color:var(--muted);">
+    📍 End-to-End Developer Journey (Today)
+  </div>
+  <div class="flow">
+    <div class="flow-node" style="border-color:var(--purple-dim);">
+      <div class="fn-icon">📋</div>
+      <div class="fn-title" style="color:var(--purple);">Jira Story</div>
+      <div class="fn-detail">Ticket created or assigned</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="border-color:var(--blue-dim);">
+      <div class="fn-icon">⌨️</div>
+      <div class="fn-title" style="color:var(--blue);">Skill Command</div>
+      <div class="fn-detail">/dip-ings-* typed in VS Code or CLI</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="border-color:var(--orange-dim);">
+      <div class="fn-icon">🤖</div>
+      <div class="fn-title" style="color:var(--orange);">AI Generates</div>
+      <div class="fn-detail">Code / config / scaffold built by skill</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="border-color:var(--teal-dim);">
+      <div class="fn-icon">🔶</div>
+      <div class="fn-title" style="color:var(--teal);">Validate</div>
+      <div class="fn-detail">Skill runs automated safety check</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="border-color:var(--yellow-dim);">
+      <div class="fn-icon">🧑</div>
+      <div class="fn-title" style="color:var(--yellow);">Human Check</div>
+      <div class="fn-detail">Double-check before PR opens</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="border-color:var(--pink-dim);">
+      <div class="fn-icon">🔍</div>
+      <div class="fn-title" style="color:var(--pink);">AI PR Review</div>
+      <div class="fn-detail">Layer 1 Copilot review</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="border-color:var(--green-dim);">
+      <div class="fn-icon">✅</div>
+      <div class="fn-title" style="color:var(--green);">Human Review</div>
+      <div class="fn-detail">Layer 2 CODEOWNERS merge</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="border-color:var(--blue-dim);">
+      <div class="fn-icon">📊</div>
+      <div class="fn-title" style="color:var(--blue);">BQ Tracker</div>
+      <div class="fn-detail">Usage logged to BigQuery</div>
+    </div>
+  </div>
+  <div class="note">
+    <strong>Key insight:</strong> Every skill invocation is tracked. Leadership can see exactly
+    which skills developers use, how often, and what velocity gains result — in real time on
+    BigQuery dashboards.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ PHASE 1 ══ -->
+<div class="phase-section">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--purple-dim);">📋</div>
+    <div class="section-meta">
+      <div class="section-phase" style="color:var(--purple);">Phase 1 — Live Today</div>
+      <div class="section-title">Contextual Jira Operations & Automated Support Escalation</div>
+      <div class="section-desc">Handle all Jira work without leaving the code editor. Git context auto-captured on every action.</div>
+    </div>
+  </div>
+  <div class="phase-card">
+
+    <!-- features -->
+    <div class="feature-grid">
+      <div class="feature-item">
+        <div class="feature-item-header">
+          <div class="feature-icon" style="background:var(--purple-dim);">⌨️</div>
+          <div class="feature-name">One Single Command</div>
+        </div>
+        <div class="feature-cmd">/dip-ings-jira-*</div>
+        <div class="feature-desc">
+          Developers handle all Jira tasks right inside VS Code or the terminal using
+          one simple command prefix. No browser context switching. No copy-pasting
+          ticket IDs. Jira lives where the code lives.
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-header">
+          <div class="feature-icon" style="background:var(--blue-dim);">🔗</div>
+          <div class="feature-name">Automatic Info Grabbing</div>
+        </div>
+        <div class="feature-cmd">auto-context</div>
+        <div class="feature-desc">
+          Every ticket comment or status update automatically captures:
+          the current <strong>Git repository name</strong>,
+          the <strong>active branch</strong>, and the <strong>exact timestamp</strong>.
+          Zero manual copy-paste. Perfect audit trail on every Jira entry.
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-header">
+          <div class="feature-icon" style="background:var(--red-dim);">🚨</div>
+          <div class="feature-name">Quick Emergency Support</div>
+        </div>
+        <div class="feature-cmd">sre-escalate</div>
+        <div class="feature-desc">
+          When a critical production incident hits, one command instantly creates a
+          connected support ticket in the <strong>WMDIP project</strong>. Skips all browser
+          forms during high-pressure moments. Engineers stay focused on fixing,
+          not filing.
+        </div>
+      </div>
+    </div>
+
+    <!-- sub-steps -->
+    <div class="steps-list">
+      <div class="step-row">
+        <div class="step-badge" style="background:var(--purple-dim);color:var(--purple);">1</div>
+        <div class="step-content">
+          <div class="step-title">Developer types Jira command in VS Code or terminal</div>
+          <div class="step-detail">
+            e.g. <code>/dip-ings-jira-comment</code>, <code>/dip-ings-jira-status</code>, or <code>/dip-ings-jira-create</code> —
+            no browser required. Skill activates immediately within the editor.
+          </div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-badge" style="background:var(--purple-dim);color:var(--purple);">2</div>
+        <div class="step-content">
+          <div class="step-title">Skill auto-captures Git context</div>
+          <div class="step-detail">
+            Before writing anything to Jira, the skill reads the current
+            <span class="chip c-blue">repo name</span>
+            <span class="chip c-blue">active branch</span>
+            <span class="chip c-blue">timestamp</span>
+            and embeds them automatically into the ticket update.
+          </div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-badge" style="background:var(--purple-dim);color:var(--purple);">3</div>
+        <div class="step-content">
+          <div class="step-title">Jira ticket updated or created with full context</div>
+          <div class="step-detail">
+            Comment posted, status changed, or new ticket created — all with traceable
+            metadata. No missing context, no incorrect branch references.
+          </div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-badge" style="background:var(--red-dim);color:var(--red);">!</div>
+        <div class="step-content">
+          <div class="step-title">Production incident path: sre-escalate</div>
+          <div class="step-detail">
+            Typing <code>sre-escalate</code> bypasses all forms and instantly creates a linked
+            support ticket in <span class="chip c-red">WMDIP project</span>.
+            The ticket is pre-populated with current repo, branch, and time.
+            Incident response starts in seconds, not minutes.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- command table -->
+    <div style="padding:0 16px 16px;">
+      <table class="cmd-table">
+        <tr>
+          <th>Command</th>
+          <th>What it does</th>
+          <th>Auto-captured</th>
+        </tr>
+        <tr>
+          <td><code>/dip-ings-jira-*</code></td>
+          <td style="color:var(--text);">All Jira operations from inside the editor</td>
+          <td><span class="chip c-blue">repo</span> <span class="chip c-blue">branch</span> <span class="chip c-blue">time</span></td>
+        </tr>
+        <tr>
+          <td><code>sre-escalate</code></td>
+          <td style="color:var(--text);">Emergency support ticket in WMDIP project</td>
+          <td><span class="chip c-red">incident context</span></td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ PHASE 2 ══ -->
+<div class="phase-section">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--orange-dim);">⚡</div>
+    <div class="section-meta">
+      <div class="section-phase" style="color:var(--orange);">Phase 2 — Live Today</div>
+      <div class="section-title">Coding & Setup Tools for Specific Projects</div>
+      <div class="section-desc">Domain-specific skills for every layer of the ingestion platform. Separated cleanly by concern.</div>
+    </div>
+  </div>
+  <div class="phase-card">
+
+    <!-- separated workflows -->
+    <div style="padding:16px 20px 0;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase;">Separated Workflows — Commands by Domain</div>
+    <div style="padding:12px 16px 0;">
+      <table class="cmd-table">
+        <tr>
+          <th>Command Prefix</th>
+          <th>Domain</th>
+          <th>Repo</th>
+          <th>Example Skills</th>
+        </tr>
+        <tr>
+          <td><code>/dip-*</code></td>
+          <td style="color:var(--orange);">PySpark App Code</td>
+          <td>pyspark-ingestion-app</td>
+          <td><span class="chip c-orange">write-task</span> <span class="chip c-orange">write-service</span> <span class="chip c-orange">tsql-to-bq</span></td>
+        </tr>
+        <tr>
+          <td><code>/dip-ings-config-*</code></td>
+          <td style="color:var(--green);">Ingestion YAML Config</td>
+          <td>progectai-ingestion</td>
+          <td><span class="chip c-green">add-job</span> <span class="chip c-green">add-sql</span> <span class="chip c-green">validate</span></td>
+        </tr>
+        <tr>
+          <td><code>/dip-ings-dag-config-*</code></td>
+          <td style="color:var(--teal);">DAG JSON Config</td>
+          <td>progectai-dag</td>
+          <td><span class="chip c-teal">add-dag</span> <span class="chip c-teal">add-task</span> <span class="chip c-teal">validate</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- feature grid -->
+    <div class="feature-grid" style="margin-top:16px;">
+      <div class="feature-item">
+        <div class="feature-item-header">
+          <div class="feature-icon" style="background:var(--green-dim);">🏗️</div>
+          <div class="feature-name">Massive Time Saver — Onboarding</div>
+        </div>
+        <div class="feature-cmd">/dip-ings-dag-config-onboard</div>
+        <div class="feature-desc">
+          When onboarding a new data tenant, this command automatically builds
+          <strong>every folder and basic setup file</strong> inside a blank Git repository.
+          Developers do not create a single file or directory by hand.
+          What used to take hours of setup is now one command.
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-header">
+          <div class="feature-icon" style="background:var(--teal-dim);">🛡️</div>
+          <div class="feature-name">Smart Code Scanner — Safety Guard</div>
+        </div>
+        <div class="feature-cmd">/dip-ings-dag-config-validate</div>
+        <div class="feature-desc">
+          Automatically scans newly modified pipeline layout files for formatting
+          mistakes <strong>before a PR can be created</strong>. Acts as an automated
+          first-pass safety guard. Then asks for a quick human double-check
+          for the final decision. Nothing broken ships to review.
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-header">
+          <div class="feature-icon" style="background:var(--orange-dim);">📝</div>
+          <div class="feature-name">App Code Generation</div>
+        </div>
+        <div class="feature-cmd">/dip-write-* /dip-barricade-*</div>
+        <div class="feature-desc">
+          Domain-specific skills for writing PySpark tasks, services, unit tests,
+          and GenAI application components. Each skill knows the team's code style,
+          patterns, anti-patterns, and testing conventions — not generic boilerplate.
+        </div>
+      </div>
+    </div>
+
+    <!-- sub-steps -->
+    <div class="steps-list">
+      <div class="step-row">
+        <div class="step-badge" style="background:var(--orange-dim);color:var(--orange);">1</div>
+        <div class="step-content">
+          <div class="step-title">Developer identifies the task type and selects the right command prefix</div>
+          <div class="step-detail">
+            App code → <code>/dip-*</code> &nbsp;|&nbsp;
+            YAML config → <code>/dip-ings-config-*</code> &nbsp;|&nbsp;
+            DAG JSON → <code>/dip-ings-dag-config-*</code>.
+            The prefixes map exactly to domain boundaries — no ambiguity.
+          </div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-badge" style="background:var(--orange-dim);color:var(--orange);">2</div>
+        <div class="step-content">
+          <div class="step-title">Skill reads domain context and grounded instructions</div>
+          <div class="step-detail">
+            Each skill loads its <code>copilot-instructions.md</code> and principles files.
+            The AI understands our exact field names, load modes, security rules (GSM, PII),
+            and anti-patterns — not a generic LLM response.
+          </div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-badge" style="background:var(--orange-dim);color:var(--orange);">3</div>
+        <div class="step-content">
+          <div class="step-title">AI generates the artefact — code, config, or scaffold</div>
+          <div class="step-detail">
+            Output is written to the correct file path following team conventions.
+            For onboarding: the entire folder structure is scaffolded.
+            For config: a validated YAML or JSON is produced.
+            For code: a tested, pattern-compliant Python module.
+          </div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-badge" style="background:var(--teal-dim);color:var(--teal);">V</div>
+        <div class="step-content">
+          <div class="step-title">Validation scan runs before PR can open</div>
+          <div class="step-detail">
+            <code>/dip-ings-dag-config-validate</code> scans the output for formatting errors,
+            missing required fields, and schema violations.
+            <span class="chip c-teal">Must pass</span> before a PR is created.
+            Human confirms the final output.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ PHASE 3 ══ -->
+<div class="phase-section">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--pink-dim);">🔍</div>
+    <div class="section-meta">
+      <div class="section-phase" style="color:var(--pink);">Phase 3 — Live Today</div>
+      <div class="section-title">GitHub Copilot Code Pull Request Support</div>
+      <div class="section-desc">AI-assisted PR lifecycle: grounded on private repos, auto-drafted descriptions, two-layer quality gate.</div>
+    </div>
+  </div>
+  <div class="phase-card">
+
+    <!-- feature grid -->
+    <div class="feature-grid">
+      <div class="feature-item">
+        <div class="feature-item-header">
+          <div class="feature-icon" style="background:var(--blue-dim);">🧠</div>
+          <div class="feature-name">Trained on Our Code</div>
+        </div>
+        <div class="feature-cmd">customised instruction files</div>
+        <div class="feature-desc">
+          AI models are configured to read and understand our private code repositories.
+          Customised instruction files make AI suggestions <strong>incredibly accurate</strong>
+          for our PySpark patterns, ingestion conventions, and DAG structures —
+          not generic suggestions from public training data.
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-header">
+          <div class="feature-icon" style="background:var(--purple-dim);">📝</div>
+          <div class="feature-name">Automatic PR Descriptions</div>
+        </div>
+        <div class="feature-cmd">review-pr skill</div>
+        <div class="feature-desc">
+          The AI reads the code diff and automatically drafts a clear summary
+          with <strong>interactive checkboxes</strong>. Developers check or uncheck boxes
+          instead of writing long, painful summaries by hand.
+          Reviewers get structured context immediately.
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-header">
+          <div class="feature-icon" style="background:var(--green-dim);">✅</div>
+          <div class="feature-name">Two-Layer Quality Check</div>
+        </div>
+        <div class="feature-cmd">Layer 1 AI → Layer 2 Human</div>
+        <div class="feature-desc">
+          All new code and config must pass an automated
+          <strong>GitHub Copilot AI review (Layer 1)</strong> before being
+          sent to team members for <strong>human review (Layer 2)</strong>.
+          Nothing reaches human reviewers that hasn't already been AI-checked.
+        </div>
+      </div>
+    </div>
+
+    <!-- two-layer detail -->
+    <div class="two-layer">
+      <div class="layer-card" style="background:var(--blue-dim);border-color:var(--blue);">
+        <div class="lc-num" style="color:var(--blue);">L1</div>
+        <div class="lc-title">Automated AI Review (Copilot)</div>
+        <div class="lc-desc" style="color:var(--muted);">
+          GitHub Copilot reviews the PR diff automatically.
+          Checks for code quality, pattern compliance, missing tests,
+          security issues (hardcoded secrets, missing GSM references),
+          and alignment with our ingestion conventions.
+          <strong style="color:var(--blue)">Must pass before human reviewers are notified.</strong>
+        </div>
+        <div class="lc-tags">
+          <span class="chip c-blue">Code quality</span>
+          <span class="chip c-blue">Pattern check</span>
+          <span class="chip c-blue">Security scan</span>
+          <span class="chip c-blue">Convention check</span>
+        </div>
+      </div>
+      <div class="layer-card" style="background:var(--green-dim);border-color:var(--green);">
+        <div class="lc-num" style="color:var(--green);">L2</div>
+        <div class="lc-title">Human Review (CODEOWNERS)</div>
+        <div class="lc-desc" style="color:var(--muted);">
+          After Layer 1 passes, the PR goes to designated CODEOWNERS for each domain.
+          Reviewers see the AI-drafted description with interactive checkboxes,
+          the Layer 1 result, and the full diff.
+          <strong style="color:var(--green)">Human approval required to merge.</strong>
+        </div>
+        <div class="lc-tags">
+          <span class="chip c-green">CODEOWNERS review</span>
+          <span class="chip c-green">AI-drafted summary</span>
+          <span class="chip c-green">Checkbox sign-off</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- sub-steps -->
+    <div class="steps-list">
+      <div class="step-row">
+        <div class="step-badge" style="background:var(--pink-dim);color:var(--pink);">1</div>
+        <div class="step-content">
+          <div class="step-title">Developer pushes branch and opens PR</div>
+          <div class="step-detail">Branch created from story work; PR opened against main.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-badge" style="background:var(--pink-dim);color:var(--pink);">2</div>
+        <div class="step-content">
+          <div class="step-title">AI auto-drafts PR description with checkboxes</div>
+          <div class="step-detail">
+            Copilot reads the diff and generates a structured description.
+            <span class="chip c-purple">What changed</span>
+            <span class="chip c-purple">Why it changed</span>
+            <span class="chip c-purple">Test coverage</span>
+            <span class="chip c-purple">Deployment notes</span>
+            — all as checkable items. Developer reviews and adjusts.
+          </div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-badge" style="background:var(--blue-dim);color:var(--blue);">L1</div>
+        <div class="step-content">
+          <div class="step-title">Automated Copilot AI review runs (Layer 1)</div>
+          <div class="step-detail">
+            AI checks code quality, patterns, security, and conventions.
+            Must pass <span class="chip c-blue">all checks</span> before human reviewers are pinged.
+            If it fails, developer fixes and re-pushes — no human time wasted.
+          </div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-badge" style="background:var(--green-dim);color:var(--green);">L2</div>
+        <div class="step-content">
+          <div class="step-title">CODEOWNERS human review (Layer 2)</div>
+          <div class="step-detail">
+            Human reviewers see a clean, AI-summarised PR with Layer 1 results already attached.
+            Review is faster and higher quality because the obvious issues
+            were caught in Layer 1.
+          </div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-badge" style="background:var(--green-dim);color:var(--green);">✅</div>
+        <div class="step-content">
+          <div class="step-title">Approved and merged</div>
+          <div class="step-detail">
+            PR merges to main. CI pipeline runs final checks.
+            Activity logged to the Copilot Usage Tracker (below).
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ TRACKER ══ -->
+<div class="phase-section">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--yellow-dim);">📊</div>
+    <div class="section-meta">
+      <div class="section-phase" style="color:var(--yellow);">Cross-Cutting — Live Today</div>
+      <div class="section-title">DIP Ingestion Copilot Usage Tracker</div>
+      <div class="section-desc">Full telemetry of AI usage across VS Code and terminal — streamed to BigQuery for leadership dashboards.</div>
+    </div>
+  </div>
+  <div class="phase-card">
+
+    <div class="tracker-grid">
+      <div class="tracker-card">
+        <div class="tc-header">
+          <div class="tc-icon" style="background:var(--blue-dim);">📝</div>
+          <div class="tc-title">Activity Logs</div>
+        </div>
+        <div class="tc-desc">
+          The tracker automatically records when and how developers use
+          AI commands — across both standard <strong>VS Code Copilot Chat</strong>
+          and the <strong>terminal command line</strong>. Every skill invocation,
+          every command prefix, every session is captured automatically.
+          No manual reporting.
+        </div>
+        <div class="metric-row">
+          <div class="metric">
+            <div class="m-val" style="color:var(--blue);">VS Code</div>
+            <div class="m-label">+ Terminal</div>
+          </div>
+          <div class="metric">
+            <div class="m-val" style="color:var(--blue);">Auto</div>
+            <div class="m-label">Captured</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tracker-card">
+        <div class="tc-header">
+          <div class="tc-icon" style="background:var(--yellow-dim);">🗄️</div>
+          <div class="tc-title">BigQuery Dashboards</div>
+        </div>
+        <div class="tc-desc">
+          Usage data streams directly into <strong>Google BigQuery</strong> so leadership
+          can visually see tool adoption rates and how much development
+          velocity is being gained. Real-time dashboards, no manual exports,
+          no spreadsheets.
+        </div>
+        <div class="metric-row">
+          <div class="metric">
+            <div class="m-val" style="color:var(--yellow);">BQ</div>
+            <div class="m-label">Sink</div>
+          </div>
+          <div class="metric">
+            <div class="m-val" style="color:var(--yellow);">Live</div>
+            <div class="m-label">Dashboard</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tracker-card">
+        <div class="tc-header">
+          <div class="tc-icon" style="background:var(--green-dim);">📈</div>
+          <div class="tc-title">What Leadership Sees</div>
+        </div>
+        <div class="tc-desc">
+          Adoption rates per skill, per developer, per repo.
+          Velocity gains: time saved per PR, per onboarding.
+          Skill usage trends over time. Which teams are adopting fastest.
+          AI vs. manual work ratio per sprint.
+        </div>
+        <div class="metric-row">
+          <div class="metric">
+            <div class="m-val" style="color:var(--green);">Adoption</div>
+            <div class="m-label">Rate</div>
+          </div>
+          <div class="metric">
+            <div class="m-val" style="color:var(--green);">Velocity</div>
+            <div class="m-label">Delta</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tracker-card">
+        <div class="tc-header">
+          <div class="tc-icon" style="background:var(--orange-dim);">⚙️</div>
+          <div class="tc-title">Tracker Architecture</div>
+        </div>
+        <div class="tc-desc">
+          Events captured turn-by-turn via daemon listening to VS Code &amp;
+          CLI activity. Buffered to <strong>SQLite</strong> locally, then pushed to
+          <strong>BigQuery</strong>. Quota data (<code>quota_entitlement</code>,
+          <code>quota_used</code>, <code>quota_remaining</code>) embedded per-row.
+          No separate view needed.
+        </div>
+        <div class="metric-row">
+          <div class="metric">
+            <div class="m-val" style="color:var(--orange);">SQLite</div>
+            <div class="m-label">Buffer</div>
+          </div>
+          <div class="metric">
+            <div class="m-val" style="color:var(--orange);">→ BQ</div>
+            <div class="m-label">Push</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note" style="margin:0 16px 16px;">
+      <strong>This is the most mature piece of the whole platform.</strong> Most teams building
+      agentic SDLC have zero telemetry. You have real-time BigQuery dashboards tracking
+      velocity gains. This is a genuine differentiator for management conversations.
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ CURRENT STATE vs NEXT ══ -->
+<div class="divider"><span>Current State vs Target State</span></div>
+
+<div class="phase-card">
+  <div style="padding:14px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:13px;">
+    📍 What we have → What we're adding (not replacing)
+  </div>
+  <div style="padding:0 16px 16px;">
+    <table class="compare-table">
+      <tr>
+        <th style="color:var(--muted);">Capability</th>
+        <th style="color:var(--green);">✅ Today (working)</th>
+        <th style="color:var(--blue);">🔨 Adding (v3 target)</th>
+      </tr>
+      <tr>
+        <td class="col-phase">Jira Operations</td>
+        <td class="col-today">/dip-ings-jira-* commands, auto-context, sre-escalate</td>
+        <td class="col-next">Story breakdown (read → assess → plan) before coding starts</td>
+      </tr>
+      <tr>
+        <td class="col-phase">Skill Invocation</td>
+        <td class="col-today">Developer manually selects and types the right skill command</td>
+        <td class="col-next">Supervisor agent auto-routes to the right skill by task description</td>
+      </tr>
+      <tr>
+        <td class="col-phase">Multi-domain Work</td>
+        <td class="col-today">Developer runs skills in each repo manually, in their own order</td>
+        <td class="col-next">Supervisor dispatches subtasks in dependency order with cross-repo merge gates</td>
+      </tr>
+      <tr>
+        <td class="col-phase">Skills Location</td>
+        <td class="col-today">Per-repo, per-team — can drift, no central validation</td>
+        <td class="col-next">Central dip-agentic-tools repo, CI-validated, consumed by reference</td>
+      </tr>
+      <tr>
+        <td class="col-phase">Onboarding</td>
+        <td class="col-today">/dip-ings-dag-config-onboard scaffolds folders (1 repo)</td>
+        <td class="col-next">Supervisor handles cross-repo onboarding end-to-end from one Jira story</td>
+      </tr>
+      <tr>
+        <td class="col-phase">Validation</td>
+        <td class="col-today">/dip-ings-dag-config-validate + human double-check</td>
+        <td class="col-next">Same gate, now part of the automated plan→validate→execute loop per skill</td>
+      </tr>
+      <tr>
+        <td class="col-phase">PR Support</td>
+        <td class="col-today">AI-drafted descriptions + 2-layer review (L1 AI, L2 human)</td>
+        <td class="col-next">Same — no change needed, already best practice</td>
+      </tr>
+      <tr>
+        <td class="col-phase">Session State</td>
+        <td class="col-today">Lost when CLI session ends — developer restarts manually</td>
+        <td class="col-next">Resumable — Jira story is the durable state store</td>
+      </tr>
+      <tr>
+        <td class="col-phase">Usage Telemetry</td>
+        <td class="col-today">✅ SQLite → BigQuery, live dashboards — already best-in-class</td>
+        <td class="col-next">No change needed — extend with skill-level event tagging</td>
+      </tr>
+    </table>
+  </div>
+  <div class="warn">
+    <strong>The v3 design is additive, not a rewrite.</strong> Every skill built today
+    carries forward. The supervisor agent is a new orchestration layer on top.
+    The central repo is a reorganisation of what already exists.
+    Estimated meaningful new build: the supervisor + jira-story-breakdown +
+    central repo structure + MCP wiring.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ FOOTER ══ -->
+<div class="footer">
+  <strong>DIP — Data Ingestion Platform</strong> · Current AI-SDLC (As-Is) ·
+  Built on GitHub Copilot · GCP · BigQuery · PySpark · Airflow<br>
+  <span style="margin-top:6px;display:block;">
+    Phase 1: Jira Ops &amp; SRE Escalation &nbsp;·&nbsp;
+    Phase 2: Domain Coding &amp; Setup Tools &nbsp;·&nbsp;
+    Phase 3: PR Support &amp; Quality Gates &nbsp;·&nbsp;
+    Tracker: BigQuery Telemetry
+  </span>
+</div>
+
+</body>
+</html>
