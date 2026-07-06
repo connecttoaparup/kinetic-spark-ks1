@@ -593,16 +593,16 @@ commit and raise a PR for DIP-1234
 **Possible Output:** a commit + filled PR body + CHANGELOG entry + an AI review
 verdict, all in one flow.
 
-**Reference:** the `edh-commit-and-raise-pr` SKILL + GUIDE already produced
+**Reference:** the `dip-commit-and-raise-pr` SKILL + GUIDE already produced
 (rename prefix to `dip-`).
 
 ---
 
-## STORY 18 — Rename existing skills from "edh-" to "dip-"
+## STORY 18 — Rename existing skills from "dip-" to "dip-"
 **Owner:** Developer 1 (app) + Developer 2 (dag) · **Points:** 5 · **CUTTABLE**
 
 **Description:**
-Rename the skills we already use today from the `edh-` prefix to `dip-`, update
+Rename the skills we already use today from the `dip-` prefix to `dip-`, update
 all references, and confirm they still pass the CI gate. Split across Dev 1 (app
 + app-config skills) and Dev 2 (dag + dag-config skills).
 
@@ -611,7 +611,7 @@ all references, and confirm they still pass the CI gate. Split across Dev 1 (app
 - [ ] References to old names updated across the central repo.
 - [ ] CI gate passes for all renamed skills.
 
-**Possible Input:** the existing `edh-*` skills.
+**Possible Input:** the existing `dip-*` skills.
 **Possible Output:** the same skills, renamed and passing.
 **Reference:** naming rules in `CONTRIBUTING.md` (Story 1).
 **Note:** First to cut if the sprint runs short — ship new `dip-` skills, migrate
@@ -669,7 +669,7 @@ a runbook someone else could follow.
 | 15 | Point agents at real tools | Architect + Dev 3 | 3 |
 | 16 | VS Code workspaces | Dev 3 | 2 |
 | 17 | commit/review skills | Dev 1 | 3 |
-| 18 | edh→dip rename (CUTTABLE) | Dev 1 + Dev 2 | 5 |
+| 18 | dip→dip rename (CUTTABLE) | Dev 1 + Dev 2 | 5 |
 | 19 | End-to-end test + runbook | All / Architect | 5 |
 
 **Totals:** Dev 1 ≈ 19 · Dev 2 ≈ 18 · Dev 3 ≈ 12 (+ pairing on 13/14) ·
