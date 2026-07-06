@@ -1,0 +1,6 @@
+# DIP Agentic Tools (Prototype)
+
+## Docs
+- [AGENTS.md](AGENTS.md): routing, hard rules, repo map.
+- [Architecture](.principles/architecture.md): platform overview.
+- [Security](.principles/security.md): GSM, PII, least-privilege.

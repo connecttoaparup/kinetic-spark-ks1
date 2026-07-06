@@ -1,0 +1,18 @@
+{
+  "story": "DIP-1234",
+  "title": "Onboard CRM customers + orders into BQ with daily DAG",
+  "description": "Ingest the CRM 'customers' and 'orders' tables into BigQuery (incremental on updated_at), add an orders enrichment SQL, and schedule both jobs in a daily DAG.",
+  "acceptance_criteria": [
+    "customers job YAML exists and validates",
+    "orders job YAML exists and validates",
+    "orders enrichment SQL added",
+    "daily DAG schedules both jobs",
+    "DAG references only merged job names",
+    "all PRs pass review before merge"
+  ],
+  "story_points": 13,
+  "state": {
+    "plan_approved": false,
+    "subtasks": []
+  }
+}

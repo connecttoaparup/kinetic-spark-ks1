@@ -1,0 +1,12 @@
+{
+  "name": "dip-ings-platform",
+  "version": "0.1.0",
+  "description": "DIP prototype: supervisor + engineer agents and skills for PySpark + Airflow ingestion.",
+  "agents": [
+    "agents"
+  ],
+  "skills": [
+    "skills"
+  ],
+  "commands": []
+}
